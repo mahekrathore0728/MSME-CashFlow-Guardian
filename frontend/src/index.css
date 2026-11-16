@@ -2,30 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Graphite Noir Design System Tokens */
+  --bg-main: #111214;
+  --bg-sidebar: #17191C;
+  --bg-card: #202327;
+  --bg-surface: #292D32;
+  --border-color: #383D43;
+  --accent-primary: #8299AD;
+  --accent-secondary: #B8BEC5;
+  --text-primary: #F1F2F3;
+  --text-secondary: #A0A5AC;
+  --color-success: #8DA995;
+  --color-warning: #C9A875;
+  --color-danger: #C77F83;
+}
+
 @layer base {
-  body {
-    background-color: #141816;
-    color: #F1F0E8;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  html, body {
+    background-color: #111214 !important;
+    color: #F1F2F3 !important;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
-  /* Custom subtle scrollbars */
+  /* Professional subtle custom scrollbars */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
-    background: #141816;
+    background: #111214;
   }
   ::-webkit-scrollbar-thumb {
-    background: #252F29;
-    border-radius: 3px;
+    background: #292D32;
+    border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #354239;
+    background: #383D43;
   }
 }
+
+/* Explicit Graphite Noir Overrides to eliminate any legacy green shades */
+.bg-midnight, .bg-graphite-main { background-color: #111214 !important; }
+.bg-forest, .bg-graphite-sidebar { background-color: #17191C !important; }
+.bg-moss, .bg-graphite-card { background-color: #202327 !important; }
+.bg-olive, .bg-graphite-surface { background-color: #292D32 !important; }
+.border-olive-muted, .border-graphite-border { border-color: #383D43 !important; }
+.text-ivory, .text-graphite-text { color: #F1F2F3 !important; }
+.text-gray-soft, .text-graphite-muted { color: #A0A5AC !important; }
+.text-sage, .text-graphite-accent { color: #8299AD !important; }
+.text-champagne, .text-graphite-silver { color: #B8BEC5 !important; }
 
 @layer utilities {
   .tabular-nums {

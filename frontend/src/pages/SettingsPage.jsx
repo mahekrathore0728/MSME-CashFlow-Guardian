@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Building, ShieldCheck, Database, RefreshCw, AlertTriangle, CheckCircle2, User } from 'lucide-react';
+import {
+  Settings,
+  Building,
+  ShieldCheck,
+  Database,
+  RefreshCw,
+  AlertTriangle,
+  CheckCircle2,
+  User,
+  Info
+} from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useBusiness } from '../context/BusinessContext';
@@ -34,14 +44,14 @@ export function SettingsPage() {
       setSaveSuccess("Minimum operating reserve threshold updated successfully.");
       setTimeout(() => setSaveSuccess(''), 3000);
     } catch (err) {
-      alert("Failed to update reserve settings.");
+      alert("Failed to update operating reserve limit.");
     } finally {
       setSaveLoading(false);
     }
   };
 
-  const handleResetDemo = async () => {
-    if (!window.confirm("Are you sure you want to reset the demo data? This will clear fictional transactions and invoices.")) {
+  const handleResetSample = async () => {
+    if (!window.confirm("Are you sure you want to reset sample data? This will clear fictional transactions and restore initial baseline records.")) {
       return;
     }
     setDemoMessage('');
@@ -49,51 +59,53 @@ export function SettingsPage() {
       const res = await resetDemoData();
       setDemoMessage(res.message);
     } catch (err) {
-      alert("Failed to reset demo dataset.");
+      alert("Failed to reset sample dataset.");
     }
   };
 
-  const handleReloadDemo = async () => {
+  const handleReloadSample = async () => {
     setDemoMessage('');
     try {
       const res = await loadDemoData();
       setDemoMessage(res.message);
     } catch (err) {
-      alert("Failed to load demo dataset.");
+      alert("Failed to load sample dataset.");
     }
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
+    <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-200">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-ivory">System & Business Settings</h1>
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ivory">
+          Enterprise & System Settings
+        </h1>
         <p className="text-xs text-gray-soft mt-1">
-          Configure operating reserve parameters, business credentials, and demo data sandboxes
+          Configure operating reserve parameters, business credentials, and sample evaluation environments
         </p>
       </div>
 
       {/* Business Profile Summary */}
       {activeBusiness && (
-        <div className="bg-moss border border-olive-muted rounded-2xl p-6 shadow-card space-y-4">
-          <div className="flex items-center gap-3 pb-3 border-b border-olive-muted">
-            <Building className="w-5 h-5 text-sage" />
-            <h3 className="text-base font-semibold text-ivory">Active Business Profile</h3>
+        <div className="bg-moss border border-olive-muted rounded-xl p-5 sm:p-6 shadow-card space-y-4">
+          <div className="flex items-center gap-2.5 pb-3 border-b border-olive-muted/60">
+            <Building className="w-4 h-4 text-sage" />
+            <h3 className="text-sm sm:text-base font-semibold text-ivory">Active Enterprise Configuration</h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs tabular-nums">
-            <div className="p-3.5 rounded-xl bg-olive border border-olive-muted">
-              <span className="text-[10px] text-gray-soft uppercase font-semibold">Business Name</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs tabular-nums">
+            <div className="p-3.5 rounded-lg bg-olive/40 border border-olive-muted">
+              <span className="text-[10px] text-gray-soft uppercase font-semibold">Registered Entity</span>
               <p className="text-sm font-bold text-ivory mt-0.5">{activeBusiness.name}</p>
               <p className="text-[10px] text-gray-soft mt-0.5">{activeBusiness.business_type}</p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-olive border border-olive-muted">
+            <div className="p-3.5 rounded-lg bg-olive/40 border border-olive-muted">
               <span className="text-[10px] text-gray-soft uppercase font-semibold">Base Currency</span>
               <p className="text-sm font-bold text-sage mt-0.5">{activeBusiness.currency} (Indian Rupee ₹)</p>
-              <p className="text-[10px] text-gray-soft mt-0.5">Enforces Indian Lakhs / Crores notation</p>
+              <p className="text-[10px] text-gray-soft mt-0.5">Enforces Indian Lakhs & Crores formatting</p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-olive border border-olive-muted">
+            <div className="p-3.5 rounded-lg bg-olive/40 border border-olive-muted">
               <span className="text-[10px] text-gray-soft uppercase font-semibold">Opening Cash Balance</span>
               <p className="text-sm font-bold text-ivory mt-0.5">{formatINR(activeBusiness.opening_cash_balance)}</p>
               <p className="text-[10px] text-gray-soft mt-0.5">As of {formatDate(activeBusiness.opening_balance_date)}</p>
@@ -104,27 +116,27 @@ export function SettingsPage() {
 
       {/* Minimum Operating Reserve Configuration */}
       {activeBusiness && (
-        <div className="bg-moss border border-olive-muted rounded-2xl p-6 shadow-card space-y-4">
-          <div className="flex items-center gap-3 pb-3 border-b border-olive-muted">
-            <ShieldCheck className="w-5 h-5 text-amber" />
+        <div className="bg-moss border border-olive-muted rounded-xl p-5 sm:p-6 shadow-card space-y-4">
+          <div className="flex items-start sm:items-center gap-3 pb-3 border-b border-olive-muted/60">
+            <ShieldCheck className="w-5 h-5 text-amber flex-shrink-0 mt-0.5 sm:mt-0" />
             <div>
-              <h3 className="text-base font-semibold text-ivory">Liquidity Safety Buffer (Minimum Reserve)</h3>
+              <h3 className="text-sm sm:text-base font-semibold text-ivory">Liquidity Safety Buffer (Operating Reserve)</h3>
               <p className="text-xs text-gray-soft">
-                Define the cash threshold below which the platform flags critical liquidity deficits
+                Define the minimum cash balance threshold below which the platform flags critical liquidity deficits
               </p>
             </div>
           </div>
 
           {saveSuccess && (
-            <div className="p-3 rounded-xl bg-sage/10 border border-sage/30 text-sage text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="p-3 rounded-lg bg-emerald/10 border border-emerald/25 text-emerald text-xs flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
               <span>{saveSuccess}</span>
             </div>
           )}
 
           <form onSubmit={handleSaveReserve} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-soft mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-gray-soft mb-1.5 uppercase tracking-wider">
                 Minimum Operating Reserve (₹)
               </label>
               <div className="relative max-w-sm">
@@ -135,7 +147,7 @@ export function SettingsPage() {
                   required
                   value={reserveAmount}
                   onChange={(e) => setReserveAmount(e.target.value)}
-                  className="w-full pl-8 pr-4 py-2.5 rounded-xl bg-olive border border-olive-muted text-sm text-ivory tabular-nums focus:outline-none focus:border-sage"
+                  className="w-full pl-8 pr-4 py-2 rounded-lg bg-olive/50 border border-olive-muted text-xs text-ivory tabular-nums focus:outline-none focus:border-sage"
                 />
               </div>
             </div>
@@ -143,7 +155,7 @@ export function SettingsPage() {
             <button
               type="submit"
               disabled={saveLoading}
-              className="px-5 py-2 rounded-xl bg-sage text-midnight font-bold text-xs hover:bg-sage-hover disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-sage text-midnight font-bold text-xs hover:bg-sage-hover disabled:opacity-50 transition-colors"
             >
               {saveLoading ? "Saving..." : "Update Reserve Limit"}
             </button>
@@ -151,62 +163,62 @@ export function SettingsPage() {
         </div>
       )}
 
-      {/* Demo Dataset Sandboxing */}
-      <div className="bg-moss border border-champagne/30 rounded-2xl p-6 shadow-card space-y-4">
-        <div className="flex items-center gap-3 pb-3 border-b border-olive-muted">
-          <Database className="w-5 h-5 text-champagne" />
+      {/* Sample Dataset Sandboxing */}
+      <div className="bg-moss border border-olive-muted rounded-xl p-5 sm:p-6 shadow-card space-y-4">
+        <div className="flex items-start sm:items-center gap-3 pb-3 border-b border-olive-muted/60">
+          <Database className="w-5 h-5 text-champagne flex-shrink-0 mt-0.5 sm:mt-0" />
           <div>
-            <h3 className="text-base font-semibold text-ivory">Sharma & Co. Fictional Dataset Sandbox</h3>
+            <h3 className="text-sm sm:text-base font-semibold text-ivory">Sharma & Co. Sample Dataset Sandbox</h3>
             <p className="text-xs text-gray-soft">
-              Load or reset the pre-seeded wholesale distribution business dataset
+              Manage pre-seeded FMCG wholesale distribution records for risk-free system evaluation
             </p>
           </div>
         </div>
 
         {demoMessage && (
-          <div className="p-3 rounded-xl bg-champagne/10 border border-champagne/30 text-champagne text-xs flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4" />
+          <div className="p-3 rounded-lg bg-champagne/10 border border-champagne/25 text-champagne text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
             <span>{demoMessage}</span>
           </div>
         )}
 
-        <div className="p-3.5 rounded-xl bg-olive border border-olive-muted text-xs text-gray-soft">
-          <p className="font-semibold text-ivory mb-1">Dataset Notice & Disclaimer:</p>
+        <div className="p-3.5 rounded-lg bg-olive/40 border border-olive-muted text-xs text-gray-soft leading-relaxed">
+          <p className="font-semibold text-ivory mb-1">Sample Data Disclosure:</p>
           <p>
-            Demo data represents a fictional wholesale distribution business and does not contain real financial records. Resetting demo data will only wipe fictional transactions and will never delete real user businesses.
+            Sample data reflects a fictional wholesale enterprise (Sharma & Co.) and contains no real personal or banking records. Resetting or reloading sample data only affects sample-tagged records and will never touch real enterprise accounts.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3 pt-2">
+        <div className="flex flex-wrap gap-3 pt-1">
           <button
-            onClick={handleReloadDemo}
+            onClick={handleReloadSample}
             disabled={demoLoading}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-olive border border-champagne/40 text-champagne hover:bg-champagne/10 text-xs font-semibold tracking-wide transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-olive/50 border border-champagne/30 text-champagne hover:bg-champagne/10 text-xs font-semibold tracking-wide transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${demoLoading ? 'animate-spin' : ''}`} />
-            <span>Re-seed Sharma & Co. Dataset</span>
+            <span>Re-seed Sample Data</span>
           </button>
 
           <button
-            onClick={handleResetDemo}
+            onClick={handleResetSample}
             disabled={demoLoading}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-olive border border-crimson/40 text-crimson hover:bg-crimson/10 text-xs font-semibold tracking-wide transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-olive/50 border border-crimson/30 text-crimson hover:bg-crimson/10 text-xs font-semibold tracking-wide transition-colors disabled:opacity-50"
           >
-            <span>Reset Demo Records</span>
+            <span>Reset Sample Records</span>
           </button>
         </div>
       </div>
 
       {/* User Account Info */}
-      <div className="bg-moss border border-olive-muted rounded-2xl p-6 shadow-card space-y-3">
-        <div className="flex items-center gap-3 pb-3 border-b border-olive-muted">
-          <User className="w-5 h-5 text-gray-soft" />
-          <h3 className="text-base font-semibold text-ivory">Account Information</h3>
+      <div className="bg-moss border border-olive-muted rounded-xl p-5 sm:p-6 shadow-card space-y-3">
+        <div className="flex items-center gap-2.5 pb-3 border-b border-olive-muted/60">
+          <User className="w-4 h-4 text-gray-soft" />
+          <h3 className="text-sm sm:text-base font-semibold text-ivory">Administrator Credentials</h3>
         </div>
         <div className="text-xs space-y-1.5 text-gray-soft">
           <p><span className="text-ivory font-medium">Name:</span> {user?.full_name}</p>
           <p><span className="text-ivory font-medium">Email:</span> {user?.email}</p>
-          <p><span className="text-ivory font-medium">Authentication:</span> Secure Bcrypt + JWT (HS256)</p>
+          <p><span className="text-ivory font-medium">Security Protocol:</span> Bcrypt Hashed + HMAC-SHA256 JWT Token</p>
         </div>
       </div>
     </div>

@@ -163,6 +163,46 @@ class DemoService:
                 "payment_date": today - timedelta(days=24), # 1 day late
                 "type": "RECEIVABLE"
             },
+            {
+                "customer": "Sunrise Retailers",
+                "inv_num": "INV-2026-015",
+                "issue": today - timedelta(days=56),
+                "due": today - timedelta(days=41),
+                "total": Decimal('75000.00'),
+                "paid": Decimal('75000.00'),
+                "payment_date": today - timedelta(days=41), # On due date
+                "type": "RECEIVABLE"
+            },
+            {
+                "customer": "Gupta Enterprises",
+                "inv_num": "INV-2026-007",
+                "issue": today - timedelta(days=60),
+                "due": today - timedelta(days=30),
+                "total": Decimal('120000.00'),
+                "paid": Decimal('120000.00'),
+                "payment_date": today - timedelta(days=29), # 1 day early
+                "type": "RECEIVABLE"
+            },
+            {
+                "customer": "Verma Distributors",
+                "inv_num": "INV-2026-008",
+                "issue": today - timedelta(days=59),
+                "due": today - timedelta(days=14),
+                "total": Decimal('180000.00'),
+                "paid": Decimal('180000.00'),
+                "payment_date": today - timedelta(days=1), # 13 days late
+                "type": "RECEIVABLE"
+            },
+            {
+                "customer": "Rajasthan Wholesale Mart",
+                "inv_num": "INV-2026-009",
+                "issue": today - timedelta(days=60),
+                "due": today - timedelta(days=30),
+                "total": Decimal('240000.00'),
+                "paid": Decimal('240000.00'),
+                "payment_date": today - timedelta(days=2), # 28 days late
+                "type": "RECEIVABLE"
+            },
 
             # PENDING / UPCOMING CUSTOMER INVOICES
             {
